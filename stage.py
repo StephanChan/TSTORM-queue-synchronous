@@ -7,7 +7,7 @@ import time
 import mymclController as mcl
 import sys
 
-class Stage(module.Module):
+class Stage(QtWidgets.QWidget):
     signal=QtCore.pyqtSignal(float)
     def __init__(self):
         super().__init__()
@@ -15,6 +15,7 @@ class Stage(module.Module):
         self.ui=ui.stageUI()
         self.ui.setupUI()
         self.ui.show()
+
         self.handle_x = pyapt.APTMotor(83833850)
         self.handle_y = pyapt.APTMotor(83840820)
         self.handle_z = pyapt.APTMotor(83841441)
@@ -58,14 +59,26 @@ class Stage(module.Module):
         self.ui.piezo_go.clicked.connect(lambda: self.piezo_Abs(distance=float(self.ui.piezo_doublespinbox.text())))
         self.ui.zRel_button.clicked.connect(lambda: self.piezo_Rel(distance=float(self.ui.zReldoublespinbox.text())))
 
-    def run(self,step):
+
+    '''def move(self,n,step):
+        if n>0:
+            print("stage is doing work %d" % n)
+            #print("stage thread id : " + str(threading.current_thread()))
+            n=n-step
+            self.n=n
             self.piezo_Rel(step)
             time.sleep(1)
+            if self.is_stage_runing==True:
+                self.signal.emit(self.n)'''
 
+    def run(self, step):
+        print("stage is doing work")
+        #print("stage thread id : " + str(threading.current_thread()))
+        self.piezo_Rel(step)
+        time.sleep(1)
 
-
-
-
+    def Signal_emit(self):
+        self.signal.emit(self.n)
 
     def ZUP(self):
         self.handle_z.mRel(.01)
@@ -171,5 +184,5 @@ class Stage(module.Module):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    ex = Stage({})
+    ex = Stage()
     sys.exit(app.exec_())
