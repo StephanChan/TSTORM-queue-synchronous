@@ -121,6 +121,22 @@ class MainWindow(QWidget):
 # handle record
         recordGroupBox = QGroupBox("record box",self)
         verticalLayout_r = QVBoxLayout(recordGroupBox)
+        #isolated record
+        horizontalLayout_i1=QHBoxLayout()
+        self.IrecordButton=QPushButton('isolated_record',self)
+        horizontalLayout_i1.addWidget(self.IrecordButton)
+
+        horizontalLayout_i2=QHBoxLayout()
+        label_Icam_expo=QLabel("cam_expo", recordGroupBox)
+        self.Icam_expo = QDoubleSpinBox(recordGroupBox)
+        self.Icam_expo.setDecimals(0)
+        self.Icam_expo.setMinimum(0)
+        self.Icam_expo.setMaximum(200)
+        self.Icam_expo.setValue(30)
+        horizontalLayout_i2.addWidget(label_Icam_expo)
+        horizontalLayout_i2.addWidget(self.Icam_expo)
+        spacerItem = QSpacerItem(10, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
         #connect
         #horizontalLayout_r0 = QHBoxLayout()
         #self.connectButton = QPushButton('connect', self)
@@ -196,7 +212,7 @@ class MainWindow(QWidget):
         horizontalLayout_r5.addWidget(self.step)
         # record button
         horizontalLayout_r7 = QHBoxLayout()
-        self.recordButton = QPushButton('record', self)
+        self.recordButton = QPushButton('syn_record', self)
         horizontalLayout_r7.addWidget(self.recordButton)
         #filename
         horizontalLayout_r6=QHBoxLayout()
@@ -212,6 +228,9 @@ class MainWindow(QWidget):
         horizontalLayout_r6.addWidget(self.name_num)
 
         #verticalLayout_r.addLayout(horizontalLayout_r0)
+        verticalLayout_r.addLayout(horizontalLayout_i1)
+        verticalLayout_r.addLayout(horizontalLayout_i2)
+        #verticalLayout_r.addWidget(spacerItem)
         verticalLayout_r.addLayout(horizontalLayout_r1)
         verticalLayout_r.addLayout(horizontalLayout_r2)
         verticalLayout_r.addLayout(horizontalLayout_r3)
