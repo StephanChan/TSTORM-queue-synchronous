@@ -54,6 +54,7 @@ class MainWindow:
         self.ui.StageButton.clicked.connect(lambda: self.stageUi())
         self.ui.liveButton.clicked.connect(lambda: self.live_state_change())
         self.ui.recordButton.clicked.connect(lambda: self.record_state_change())
+        self.ui.IrecordButton.clicked.connect(lambda: self.Irecord_state_change())
         self.ui.autoscalebutton.clicked.connect(lambda: self.autoscale())
         #self.ui.set_button.clicked.connect(lambda: self.camera())
         #self.ui.connectButton.clicked.connect(lambda: self.connect())
@@ -94,6 +95,19 @@ class MainWindow:
                 self.readout_time = 0'''
 
 
+    def Irecord_state_change(self):
+        if not self.ui.IrecordButton.isChecked():#stop recording
+            self.record_thread_flag = False
+            self.ui.IrecordButton.setText('record')
+            self.hcam.stopAcquisition()
+            #self.liveButton.setChecked(True)
+            #self.live_state_change()
+        else:
+            filename = 'D:\\Data\\' + self.ui.name_text.text() + self.ui.name_num.text() + '.tif'
+            self.tiff = libtiff.TIFF.open(filename, mode='w8')  # use libtiff
+            self.record_thread_flag = True
+            self.ui.IrecordButton.setText('stop')
+            self.hcam.setPropertyValue('exposure_time', float(self.ui.Icam_expo.text()))
 
 
 
