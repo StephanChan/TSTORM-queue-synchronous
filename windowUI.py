@@ -20,13 +20,9 @@ class MainWindow(QWidget):
         horizontalLayout_1 = QHBoxLayout()
         spacerItem = QSpacerItem(100, 100, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.shutterButton = QPushButton('shutter', self)
-        self.shutterButton.setCheckable(True)
         self.AOTFButton = QPushButton('AOTF', self)
-        self.AOTFButton.setCheckable(True)
         self.GalvoButton = QPushButton('Galvo', self)
-        self.GalvoButton.setCheckable(True)
         self.StageButton = QPushButton('stage', self)
-        self.StageButton.setCheckable(True)
         horizontalLayout_1.addWidget(self.shutterButton)
         horizontalLayout_1.addItem(spacerItem)
         horizontalLayout_1.addWidget(self.AOTFButton)
@@ -110,7 +106,7 @@ class MainWindow(QWidget):
         self.Icam_expo.setValue(30)
         horizontalLayout_i2.addWidget(label_Icam_expo)
         horizontalLayout_i2.addWidget(self.Icam_expo)
-        spacerItem = QSpacerItem(10, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        spacerItem = QSpacerItem(1, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         #connect
         #horizontalLayout_r0 = QHBoxLayout()

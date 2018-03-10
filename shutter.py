@@ -3,10 +3,9 @@ import module
 from PyQt5 import QtWidgets
 import shutterUI as ui
 
-class Shutter(module.Module):
-    def __init__(self,message):
-        super().__init__(message)
-        self.message=message
+class Shutter(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
         self.gui=ui.shutterGui()
         self.gui.setupUI()
         self.gui.button_state.clicked.connect(lambda: self.shutter())
