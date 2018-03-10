@@ -8,10 +8,9 @@ import ctypes
 import time
 import sys
 
-class Galvo(module.Module):
-    def __init__(self,message):
-        super().__init__(message)
-        self.message=message
+class Galvo(QWidget):
+    def __init__(self):
+        super().__init__()
         self.ui=ui.galvoGui()
         self.ui.setupUI()
         self.ui.refresh.clicked.connect(lambda: self.refresh())

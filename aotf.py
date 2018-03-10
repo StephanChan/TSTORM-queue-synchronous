@@ -5,10 +5,9 @@ import aotfUI as ui
 import AOTF_API as aotf
 import module
 
-class Aotf(module.Module):
-    def __init__(self,message):
-        super().__init__(message)
-        self.message=message
+class Aotf(QWidget):
+    def __init__(self):
+        super().__init__()
         self.ui=ui.aotfGui()
         self.ui.setupUI()
         self.AOTF_handle = aotf.AOTF()
