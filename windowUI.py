@@ -20,9 +20,13 @@ class MainWindow(QWidget):
         horizontalLayout_1 = QHBoxLayout()
         spacerItem = QSpacerItem(100, 100, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.shutterButton = QPushButton('shutter', self)
+        self.shutterButton.setCheckable(True)
         self.AOTFButton = QPushButton('AOTF', self)
+        self.AOTFButton.setCheckable(True)
         self.GalvoButton = QPushButton('Galvo', self)
+        self.GalvoButton.setCheckable(True)
         self.StageButton = QPushButton('stage', self)
+        self.StageButton.setCheckable(True)
         horizontalLayout_1.addWidget(self.shutterButton)
         horizontalLayout_1.addItem(spacerItem)
         horizontalLayout_1.addWidget(self.AOTFButton)
@@ -61,18 +65,7 @@ class MainWindow(QWidget):
 # handle live
         liveGroupBox = QGroupBox("live box",self)
         verticalLayout_l = QVBoxLayout(liveGroupBox)
-        ''''#405
-        horizontalLayout_l1=QHBoxLayout()
-        horizontalLayout_l11 = QHBoxLayout()
-        label_405_expo=QLabel("405_exposure",liveGroupBox)
-        self._405_expo=QDoubleSpinBox(liveGroupBox)
-        self._405_expo.setDecimals(0)
-        self._405_expo.setMinimum(0)
-        self._405_expo.setMaximum(2000)
-        self._405_expo.setValue(100)
-        horizontalLayout_l1.addWidget(label_405_expo)
-        horizontalLayout_l1.addWidget(self._405_expo)'''
-        # 647 and camera exposure
+        # camera exposure
         horizontalLayout_l2=QHBoxLayout()
         horizontalLayout_l22 = QHBoxLayout()
         label_cam_expo=QLabel("cam_exposure",liveGroupBox)
@@ -83,25 +76,6 @@ class MainWindow(QWidget):
         self.cam_expo.setValue(50)
         horizontalLayout_l2.addWidget(label_cam_expo)
         horizontalLayout_l2.addWidget(self.cam_expo)
-        ''''#frames and cycles
-        horizontalLayout_l3=QHBoxLayout()
-        horizontalLayout_l33 = QHBoxLayout()
-        label_frames=QLabel("frames",liveGroupBox)
-        self.frames=QDoubleSpinBox(liveGroupBox)
-        self.frames.setDecimals(0)
-        self.frames.setMinimum(1)
-        self.frames.setMaximum(100)
-        self.frames.setValue(10)
-        label_cycles=QLabel("cycles",liveGroupBox)
-        self.cycles=QDoubleSpinBox(liveGroupBox)
-        self.cycles.setDecimals(0)
-        self.cycles.setMinimum(0)
-        self.cycles.setMaximum(1000)
-        self.cycles.setValue(0)
-        horizontalLayout_l3.addWidget(label_frames)
-        horizontalLayout_l3.addWidget(self.frames)
-        horizontalLayout_l33.addWidget(label_cycles)
-        horizontalLayout_l33.addWidget(self.cycles)'''
         #live button and autoscale button
         horizontalLayout_l4=QHBoxLayout()
         self.liveButton = QPushButton('live', self)
@@ -124,6 +98,7 @@ class MainWindow(QWidget):
         #isolated record
         horizontalLayout_i1=QHBoxLayout()
         self.IrecordButton=QPushButton('isolated_record',self)
+        self.IrecordButton.setCheckable(True)
         horizontalLayout_i1.addWidget(self.IrecordButton)
 
         horizontalLayout_i2=QHBoxLayout()
@@ -230,7 +205,7 @@ class MainWindow(QWidget):
         #verticalLayout_r.addLayout(horizontalLayout_r0)
         verticalLayout_r.addLayout(horizontalLayout_i1)
         verticalLayout_r.addLayout(horizontalLayout_i2)
-        #verticalLayout_r.addWidget(spacerItem)
+        verticalLayout_r.addItem(spacerItem)
         verticalLayout_r.addLayout(horizontalLayout_r1)
         verticalLayout_r.addLayout(horizontalLayout_r2)
         verticalLayout_r.addLayout(horizontalLayout_r3)
