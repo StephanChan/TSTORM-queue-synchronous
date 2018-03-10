@@ -10,7 +10,7 @@ import sys
 
 class Lines(QWidget):
     signal=QtCore.pyqtSignal(float,float)
-    def __init__(self,time_405=500,time_647=1000,frames=20,cycles=0,exposure=20,stage_range=0,stage_step=1):
+    def __init__(self,time_405=500,time_647=1000,frames=20,cycles=0,exposure=20):
         super().__init__()
         self.is_lines_runing = False
         self.read = np.int32()
@@ -20,8 +20,6 @@ class Lines(QWidget):
         self.frames=int(frames)
         self.cycles=int(cycles)
         self.exposure=int(exposure)+12
-        self.stage_range=stage_range
-        self.stage_step=stage_step
         self.done=bool32(0)
 
 
