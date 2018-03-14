@@ -93,5 +93,5 @@ class Galvo(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = Galvo({})
+    window = Galvo()
     sys.exit(app.exec_())
