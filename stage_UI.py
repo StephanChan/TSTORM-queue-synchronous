@@ -5,8 +5,8 @@ import os
 class stageUI(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-#        self.setupUI()
-#        self.show()
+        self.setupUI()
+        self.show()
         self.path=os.path.dirname(__file__)
 
     def setupUI(self):
@@ -308,15 +308,12 @@ class stageUI(QtWidgets.QWidget):
         self.verticalLayout_piezo.addLayout(self.horizontalLayout_p4)
         self.verticalLayout_piezo.addItem(spacerItem)
 
-        horizontalLayout_r=QtWidgets.QHBoxLayout(self.piezoGroupBox)
-        label=QtWidgets.QLabel("recording",self.piezoGroupBox)
-        self.record_move_range=QtWidgets.QDoubleSpinBox(self.piezoGroupBox)
-        self.move_stage_in_record=QtWidgets.QPushButton("Set",self.piezoGroupBox)
-        self.move_stage_in_record.setCheckable(True)
-        horizontalLayout_r.addWidget(label)
-        horizontalLayout_r.addWidget(self.record_move_range)
-        horizontalLayout_r.addWidget(self.move_stage_in_record)
-        self.verticalLayout_piezo.addLayout(horizontalLayout_r)
+        horizontalLayout_updown=QtWidgets.QHBoxLayout(self.piezoGroupBox)
+        self.piezo_up_button=QtWidgets.QPushButton('up',self.piezoGroupBox)
+        self.piezo_down_button=QtWidgets.QPushButton('down',self.piezoGroupBox)
+        horizontalLayout_updown.addWidget(self.piezo_up_button)
+        horizontalLayout_updown.addWidget(self.piezo_down_button)
+        self.verticalLayout_piezo.addLayout(horizontalLayout_updown)
         self.verticalLayout_piezo.addItem(spacerItem)
 
         self.gridLayout.addWidget(self.piezoGroupBox, 2, 2, 1,1)
