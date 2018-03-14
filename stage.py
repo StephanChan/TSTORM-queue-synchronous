@@ -7,7 +7,7 @@ import time
 import mymclController as mcl
 import sys
 
-class Stage(QtWidgets.QWidget):
+class Stage(module.Module):
     signal=QtCore.pyqtSignal(float)
     def __init__(self):
         super().__init__()
@@ -15,7 +15,6 @@ class Stage(QtWidgets.QWidget):
         self.ui=ui.stageUI()
         self.ui.setupUI()
         self.ui.show()
-
         self.handle_x = pyapt.APTMotor(83833850)
         self.handle_y = pyapt.APTMotor(83840820)
         self.handle_z = pyapt.APTMotor(83841441)
@@ -58,27 +57,13 @@ class Stage(QtWidgets.QWidget):
         self.ui.goButton.clicked.connect(lambda: self.GO())
         self.ui.piezo_go.clicked.connect(lambda: self.piezo_Abs(distance=float(self.ui.piezo_doublespinbox.text())))
         self.ui.zRel_button.clicked.connect(lambda: self.piezo_Rel(distance=float(self.ui.zReldoublespinbox.text())))
+        self.ui.piezo_up_button.clicked.connect(lambda: self.piezo_up())
+        self.ui.piezo_down_button.clicked.connect(lambda: self.piezo_down())
 
-
-    '''def move(self,n,step):
-        if n>0:
-            print("stage is doing work %d" % n)
-            #print("stage thread id : " + str(threading.current_thread()))
-            n=n-step
-            self.n=n
+    def run(self,step):
             self.piezo_Rel(step)
-            time.sleep(1)
-            if self.is_stage_runing==True:
-                self.signal.emit(self.n)'''
+            time.sleep(0.3)
 
-    def run(self, step):
-        print("stage is doing work")
-        #print("stage thread id : " + str(threading.current_thread()))
-        self.piezo_Rel(step)
-        time.sleep(1)
-
-    def Signal_emit(self):
-        self.signal.emit(self.n)
 
     def ZUP(self):
         self.handle_z.mRel(.01)
@@ -180,6 +165,12 @@ class Stage(QtWidgets.QWidget):
 
     def piezoinfo(self):
         self.ui.piezo_postext.setText("z_posi=" + str(format(self.mcl_handle.getPosition(3), '.3f')))
+
+    def piezo_up(self):
+        self.piezo_Rel(distance=0.5)
+
+    def piezo_down(self):
+        self.piezo_Rel(distance=-0.5)
 
 
 if __name__ == '__main__':

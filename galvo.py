@@ -26,13 +26,13 @@ class Galvo(QWidget):
             self.task=PyDAQmx.Task()
             self.task.CreateAOVoltageChan("/Dev1/ao0", "", -2.0, 2.0,
                                      PyDAQmx.DAQmx_Val_Volts, None)
-            self.task.CfgSampClkTiming("", 200000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, 200000)
+            self.task.CfgSampClkTiming("", frequency * 2000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, frequency * 2000)
 
             list = np.abs(np.arange(-2 * num, 2 * num, 0.002 * num), dtype=np.float64) - num
             list = np.tile(list, 2 * int(frequency))
             list = np.float64(list)
 
-            self.task.WriteAnalogF64(200000, 0, -1, PyDAQmx.DAQmx_Val_GroupByChannel, list, None, None)
+            self.task.WriteAnalogF64(frequency * 2000, 0, -1, PyDAQmx.DAQmx_Val_GroupByChannel, list, None, None)
             self.task.StartTask()
         else:
             self.ui.button.setText('run')
@@ -48,7 +48,6 @@ class Galvo(QWidget):
 
     '''class AOTask(PyDAQmx.Task):
         """Class for managing continuous analog output with NI devices
-
         :param chans: Analog output channels to generate data on
         :type chans: list<str>
         :param samplerate: Sampling frequency (Hz) at which data points are generated
@@ -60,7 +59,6 @@ class Galvo(QWidget):
         :param trigsrc: source of a digital trigger to start the generation
         :type trigsrc: str
         """
-
         def __init__(self, chan, samplerate, bufsize, clksrc="", trigsrc=""):
             PyDAQmx.Task.__init__(self)
             self.bufsize = bufsize
@@ -73,11 +71,9 @@ class Galvo(QWidget):
             if len(trigsrc) > 0:
                 self.CfgDigEdgeStartTrig(trigsrc, PyDAQmx.DAQmx_Val_Rising)
             self.AutoRegisterDoneEvent(0)
-
         def start(self):
             """Begins generation -- immediately if not using a trigger"""
             self.StartTask()
-
         def write(self, output):
             """Writes the data to be output to the device buffer, output will be looped when the data runs out
             :param output: data to output
@@ -87,16 +83,12 @@ class Galvo(QWidget):
             # print "output max", max(abs(output))
             self.WriteAnalogF64(self.bufsize, 0, 10.0, PyDAQmx.DAQmx_Val_GroupByChannel,
                                 output, w, None);
-
         def stop(self):
             """Halts the Generation"""
-
             self.StopTask()
-
             self.WriteAnalogScalarF64(0, 10.0, -0.5, None)
             self.StartTask()
             self.StopTask()
-
             self.ClearTask()'''
 
 if __name__ == '__main__':
