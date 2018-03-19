@@ -2,6 +2,7 @@ from PyDAQmx import *
 import module
 from PyQt5 import QtWidgets
 import shutterUI as ui
+import numpy as np
 
 class Shutter(QtWidgets.QWidget):
     def __init__(self):
@@ -23,11 +24,15 @@ class Shutter(QtWidgets.QWidget):
 
         if self.gui.button_state.isChecked():
             self.gui.button_state.setText('ON')
-            self.task.WriteDigitalScalarU32(1, 10.0, 1, None)
+            data = np.array([1, 1, 1, 1, 1, 1, 1, 1], dtype=np.uint8)
+            #self.task.WriteDigitalU8(1, 10.0, 1, None)
+            self.task.WriteDigitalLines(1, 1, 10.0, DAQmx_Val_GroupByChannel, data, None, None)
             self.task.StopTask()
         else:
             self.gui.button_state.setText('OFF')
-            self.task.WriteDigitalScalarU32(1, 10.0, 0, None)
+            data = np.array([0, 0, 0, 0, 0, 0, 0, 0], dtype=np.uint8)
+            #self.task.WriteDigitalU8(1, 10.0, 0, None)
+            self.task.WriteDigitalLines(1, 1, 10.0, DAQmx_Val_GroupByChannel, data, None, None)
             self.task.StopTask()
 
     def intensity(self):
@@ -38,5 +43,5 @@ class Shutter(QtWidgets.QWidget):
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    window = Shutter({})
+    window = Shutter()
     sys.exit(app.exec_())

@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
@@ -6,8 +5,8 @@ import os
 class stageUI(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setupUI()
-        self.show()
+        #self.setupUI()
+        #self.show()
         self.path=os.path.dirname(__file__)
 
     def setupUI(self):

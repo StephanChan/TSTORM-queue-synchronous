@@ -6,7 +6,7 @@ class aotfGui(QWidget):
     def __init__(self):
         super().__init__()
 #        self.setupUI()
-        self.show()
+        #self.show()
 
     def setupUI(self):
         self.setWindowTitle('AOTF control')
@@ -29,6 +29,7 @@ class aotfGui(QWidget):
         self.textbox_f1 = QLineEdit(self)
         self.textbox_f1.setText('77.5')
         self.textbox_f2 = QLineEdit(self)
+        self.textbox_f2.setText('153.205')
         self.textbox_f3 = QLineEdit(self)
         self.textbox_f4 = QLineEdit(self)
         self.textbox_f5 = QLineEdit(self)
@@ -60,6 +61,7 @@ class aotfGui(QWidget):
         self.textbox_a1 = QLineEdit(self)
         self.textbox_a1.setText('0.1')
         self.textbox_a2 = QLineEdit(self)
+        self.textbox_a2.setText('0.1')
         self.textbox_a3 = QLineEdit(self)
         self.textbox_a4 = QLineEdit(self)
         self.textbox_a5 = QLineEdit(self)

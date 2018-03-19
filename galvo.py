@@ -26,17 +26,20 @@ class Galvo(QWidget):
             self.task=PyDAQmx.Task()
             self.task.CreateAOVoltageChan("/Dev1/ao0", "", -2.0, 2.0,
                                      PyDAQmx.DAQmx_Val_Volts, None)
-            self.task.CfgSampClkTiming("", frequency * 2000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, frequency * 2000)
+            self.task.CfgSampClkTiming("", int(frequency) * 2000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, int(frequency) * 2000)
 
             list = np.abs(np.arange(-2 * num, 2 * num, 0.002 * num), dtype=np.float64) - num
             list = np.tile(list, 2 * int(frequency))
             list = np.float64(list)
 
-            self.task.WriteAnalogF64(frequency * 2000, 0, -1, PyDAQmx.DAQmx_Val_GroupByChannel, list, None, None)
+            self.task.WriteAnalogF64(int(frequency) * 2000, 0, -1, PyDAQmx.DAQmx_Val_GroupByChannel, list, None, None)
             self.task.StartTask()
         else:
             self.ui.button.setText('run')
-            self.task.StopTask()
+            try:
+                self.task.StopTask()
+            except:
+                pass
         pass
 
     def refresh(self):

@@ -10,6 +10,7 @@ class Aotf(QWidget):
         super().__init__()
         self.ui=ui.aotfGui()
         self.ui.setupUI()
+        self.ui.show()
         self.AOTF_handle = aotf.AOTF()
 
         self.ui.button_analog.clicked.connect(lambda: self.analog())
@@ -126,5 +127,5 @@ class Aotf(QWidget):
 
 if __name__=='__main__':
     app=QtWidgets.QApplication(sys.argv)
-    ex=Aotf({})
+    ex=Aotf()
     sys.exit(app.exec_())

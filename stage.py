@@ -1,13 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import stage_UI as ui
 import pyapt
-import module
 import threading
 import time
 import mymclController as mcl
 import sys
 
-class Stage(module.Module):
+class Stage(QtWidgets.QWidget):
     signal=QtCore.pyqtSignal(float)
     def __init__(self):
         super().__init__()
@@ -61,8 +60,9 @@ class Stage(module.Module):
         self.ui.piezo_down_button.clicked.connect(lambda: self.piezo_down())
 
     def run(self,step):
-            self.piezo_Rel(step)
-            time.sleep(0.3)
+        print('stage is doing work')
+        self.piezo_Rel(step)
+        time.sleep(0.2)
 
 
     def ZUP(self):
@@ -78,19 +78,19 @@ class Stage(module.Module):
         self.handle_z.mRel(-float(self.ui.big_step.text()))
 
     def XUP(self):
-        self.handle_y.mRel(float(self.ui.small_step.text()))
-        pass
-
-    def XUPL(self):
-        self.handle_y.mRel(float(self.ui.big_step.text()))
-        pass
-
-    def XDOWN(self):
         self.handle_y.mRel(-float(self.ui.small_step.text()))
         pass
 
-    def XDOWNL(self):
+    def XUPL(self):
         self.handle_y.mRel(-float(self.ui.big_step.text()))
+        pass
+
+    def XDOWN(self):
+        self.handle_y.mRel(float(self.ui.small_step.text()))
+        pass
+
+    def XDOWNL(self):
+        self.handle_y.mRel(float(self.ui.big_step.text()))
         pass
 
     def YLEFT(self):
