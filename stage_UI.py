@@ -1,3 +1,4 @@
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
@@ -58,6 +59,29 @@ class stageUI(QtWidgets.QWidget):
         self.horizontalLayout_2.addWidget(self.zdownLButton)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
+
+        horizontalLayout=QtWidgets.QHBoxLayout()
+        label=QtWidgets.QLabel('small move step',self.zGroupBox)
+        self.small_step=QtWidgets.QDoubleSpinBox(self.zGroupBox)
+        self.small_step.setDecimals(4)
+        self.small_step.setMinimum(0)
+        self.small_step.setMaximum(1)
+        self.small_step.setValue(0.01)
+        horizontalLayout.addWidget(label)
+        horizontalLayout.addWidget(self.small_step)
+        self.verticalLayout.addLayout(horizontalLayout)
+
+        horizontalLayout2=QtWidgets.QHBoxLayout()
+        label2=QtWidgets.QLabel('big move step',self.zGroupBox)
+        self.big_step = QtWidgets.QDoubleSpinBox(self.zGroupBox)
+        self.big_step.setDecimals(4)
+        self.big_step.setMinimum(0)
+        self.big_step.setMaximum(1)
+        self.big_step.setValue(0.05)
+        horizontalLayout2.addWidget(label2)
+        horizontalLayout2.addWidget(self.big_step)
+        self.verticalLayout.addLayout(horizontalLayout2)
+
 
         self.verticalLayout.addItem(spacerItem)
         self.gridLayout.addWidget(self.zGroupBox, 0, 0, 1, 1)
@@ -315,6 +339,17 @@ class stageUI(QtWidgets.QWidget):
         horizontalLayout_updown.addWidget(self.piezo_down_button)
         self.verticalLayout_piezo.addLayout(horizontalLayout_updown)
         self.verticalLayout_piezo.addItem(spacerItem)
+
+        horizontalLayout_p = QtWidgets.QHBoxLayout()
+        label_p = QtWidgets.QLabel('move step', self.piezoGroupBox)
+        self.step = QtWidgets.QDoubleSpinBox(self.piezoGroupBox)
+        self.step.setDecimals(3)
+        self.step.setMinimum(0)
+        self.step.setMaximum(10)
+        self.step.setValue(0.5)
+        horizontalLayout_p.addWidget(label_p)
+        horizontalLayout_p.addWidget(self.step)
+        self.verticalLayout_piezo.addLayout(horizontalLayout_p)
 
         self.gridLayout.addWidget(self.piezoGroupBox, 2, 2, 1,1)
 
