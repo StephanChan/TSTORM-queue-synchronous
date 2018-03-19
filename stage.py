@@ -66,44 +66,44 @@ class Stage(module.Module):
 
 
     def ZUP(self):
-        self.handle_z.mRel(.01)
+        self.handle_z.mRel(float(self.ui.small_step.text()))
 
     def ZUPL(self):
-        self.handle_z.mRel(.05)
+        self.handle_z.mRel(float(self.ui.big_step.text()))
 
     def ZDOWN(self):
-        self.handle_z.mRel(-.01)
+        self.handle_z.mRel(-float(self.ui.small_step.text()))
 
     def ZDOWNL(self):
-        self.handle_z.mRel(-.05)
+        self.handle_z.mRel(-float(self.ui.big_step.text()))
 
     def XUP(self):
-        self.handle_y.mRel(.01)
+        self.handle_y.mRel(float(self.ui.small_step.text()))
         pass
 
     def XUPL(self):
-        self.handle_y.mRel(.05)
+        self.handle_y.mRel(float(self.ui.big_step.text()))
         pass
 
     def XDOWN(self):
-        self.handle_y.mRel(-.01)
+        self.handle_y.mRel(-float(self.ui.small_step.text()))
         pass
 
     def XDOWNL(self):
-        self.handle_y.mRel(-.05)
+        self.handle_y.mRel(-float(self.ui.big_step.text()))
         pass
 
     def YLEFT(self):
-        self.handle_x.mRel(-.01)
+        self.handle_x.mRel(-float(self.ui.small_step.text()))
 
     def YLEFTL(self):
-        self.handle_x.mRel(-.05)
+        self.handle_x.mRel(-float(self.ui.big_step.text()))
 
     def YRIGHT(self):
-        self.handle_x.mRel(.01)
+        self.handle_x.mRel(float(self.ui.small_step.text()))
 
     def YRIGHTL(self):
-        self.handle_x.mRel(.05)
+        self.handle_x.mRel(float(self.ui.big_step.text()))
 
     def HOME(self):
         self.handle_x.mAbs(0)
@@ -167,10 +167,10 @@ class Stage(module.Module):
         self.ui.piezo_postext.setText("z_posi=" + str(format(self.mcl_handle.getPosition(3), '.3f')))
 
     def piezo_up(self):
-        self.piezo_Rel(distance=0.5)
+        self.piezo_Rel(distance=float(self.ui.step.text()))
 
     def piezo_down(self):
-        self.piezo_Rel(distance=-0.5)
+        self.piezo_Rel(distance=-float(self.ui.step.text()))
 
 
 if __name__ == '__main__':
