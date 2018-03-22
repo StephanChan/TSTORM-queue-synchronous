@@ -1,20 +1,23 @@
+
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 import sys
+import GraphicsView
+import GraphicsScene
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        #self.setupMainWindow()
-        #self.show()
+        self.setupMainWindow()
+        self.show()
 
 
 
     def setupMainWindow(self):
         self.setWindowTitle("main window")
         self.setMinimumSize(QtCore.QSize(900, 700))
-        self.setMaximumSize(QtCore.QSize(1000, 2000))
+        self.setMaximumSize(QtCore.QSize(1000, 100))
         self.gridLayout = QtWidgets.QGridLayout(self)
 # menu
         horizontalLayout_1 = QHBoxLayout()
@@ -228,13 +231,20 @@ class MainWindow(QWidget):
         self.gridLayout.addWidget(recordGroupBox, 2, 0, 2, 1)
 
         # display image window
-        self.livewindow = QLabel(self)
-        self.livewindow.setScaledContents(True)
-        data = np.ones((2048, 2048), dtype=np.uint8)
-        pixmap = QtGui.QImage(data, 2048, 2048, QtGui.QImage.Format_Indexed8)
-        pixmap = QtGui.QPixmap.fromImage(pixmap)
-        self.livewindow.setPixmap(pixmap)
-        self.gridLayout.addWidget(self.livewindow,1,1,3,3)
+        self.livewindow = GraphicsView.QtCameraGraphicsView()
+        self.scene=QtWidgets.QGraphicsScene(self)
+        self.scene.setSceneRect(0,0,600,600)
+        self.item=GraphicsScene.QtCameraGraphicsItem()
+        self.scene.addItem(self.item)
+        self.livewindow.setScene(self.scene)
+
+        #self.livewindow.setScaledContents(True)
+        #data = np.ones((2048,2048), dtype=np.uint8)
+        #pixmap = QtGui.QImage(data, 2048, 2048, QtGui.QImage.Format_Indexed8)
+        #pixmap = QtGui.QPixmap.fromImage(pixmap)
+        #self.item.updateImageWithFrame(pixmap)
+        #self.livewindow.setPixmap(pixmap)
+        self.gridLayout.addWidget(self.livewindow,1,1,3,1)
 
         horizontalLayout_message = QHBoxLayout()
         # message label
@@ -245,7 +255,26 @@ class MainWindow(QWidget):
 
         self.recordButton.setCheckable(True)
 
+def update():
+        for i in range(100):
+            num = random.randint(0, 300)
+            data = np.ones((2048,2048), dtype=np.uint8) * num
+            pixmap = QtGui.QImage(data, 2048, 2048, QtGui.QImage.Format_Indexed8)
+            pixmap = QtGui.QPixmap.fromImage(pixmap)
+            example.item.updateImageWithFrame(pixmap)
+            # app.processEvents()
+            # ex.camera_view.viewport().repaint()
+            time.sleep(0.3)
+            print(i)
+
+
 if __name__ == '__main__':
+    import random
+    import time
+    import threading
     app = QApplication(sys.argv)
     example = MainWindow()
+    #example.livewindow.click_on_pixel.connect(example.item.getIntensityInfo)
+    thread = threading.Thread(target=update)
+    thread.start()
     sys.exit(app.exec_())
