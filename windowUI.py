@@ -1,4 +1,3 @@
-
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
@@ -9,8 +8,8 @@ import GraphicsScene
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setupMainWindow()
-        self.show()
+        #self.setupMainWindow()
+         #self.show()
 
 
 
@@ -73,8 +72,10 @@ class MainWindow(QWidget):
         self.cam_expo.setMinimum(5)
         self.cam_expo.setMaximum(1000)
         self.cam_expo.setValue(50)
+        self.set_expo=QPushButton('set',liveGroupBox)
         horizontalLayout_l2.addWidget(label_cam_expo)
         horizontalLayout_l2.addWidget(self.cam_expo)
+        horizontalLayout_l2.addWidget(self.set_expo)
         #live button and autoscale button
         horizontalLayout_l4=QHBoxLayout()
         self.liveButton = QPushButton('live', self)
@@ -121,8 +122,10 @@ class MainWindow(QWidget):
         self.Icam_expo.setMinimum(0)
         self.Icam_expo.setMaximum(200)
         self.Icam_expo.setValue(30)
+        self.set_record_expo=QPushButton('set',liveGroupBox)
         horizontalLayout_i2.addWidget(label_Icam_expo)
         horizontalLayout_i2.addWidget(self.Icam_expo)
+        horizontalLayout_i2.addWidget(self.set_record_expo)
         spacerItem = QSpacerItem(1, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         #connect
@@ -234,7 +237,7 @@ class MainWindow(QWidget):
         self.livewindow = GraphicsView.QtCameraGraphicsView()
         self.scene=QtWidgets.QGraphicsScene(self)
         self.scene.setSceneRect(0,0,600,600)
-        self.item=GraphicsScene.QtCameraGraphicsItem()
+        self.item=GraphicsScene.QtCameraGraphicsItem(parent=self.scene)
         self.scene.addItem(self.item)
         self.livewindow.setScene(self.scene)
 

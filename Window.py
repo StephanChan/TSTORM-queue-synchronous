@@ -56,6 +56,8 @@ class MainWindow:
         self.ui.slider_up.valueChanged.connect(lambda: self.upscale())
         self.ui.slider_down.valueChanged.connect(lambda: self.downscale())
         self.ui.livewindow.click_on_pixel.connect(self.getIntensityInfo)
+        self.ui.set_expo.clicked.connect(lambda: self.set_expo())
+        self.ui.set_record_expo.clicked.connect(lambda: self.set_record_expo)
 
         self.live_thread = threading.Thread(target=self.display, name='liveThread')
         self.record_thread = threading.Thread(target=self.recording, name="recordThread")
@@ -75,6 +77,12 @@ class MainWindow:
 
     def downscale(self):
         self.rescale_min=self.ui.slider_down.value()
+
+    def set_expo(self):
+        self.hcam.setPropertyValue('exposure_time', float(self.ui.cam_expo.text())/1000.0)
+
+    def set_record_expo(self):
+        self.hcam.setPropertyValue('exposure_time', float(self.ui.Icam_expo.text())/1000.0)
 
     '''def get_buffer(self):
             [self.frames, dims] = self.hcam.getFrames()
@@ -97,9 +105,13 @@ class MainWindow:
 
     def get_buffer(self,event_live,event_record):
             [self.frames, dims] = self.hcam.getFrames()
-            print(str(len(self.frames)) + "  frames get")
+            #print(str(len(self.frames)) + "  frames get")
             if self.live_thread_flag == True:
                 event_live.set()
+                if not self.live_thread.is_alive() :#Figure out: why when stage move live thread exit?
+                    self.live_thread = threading.Thread(target=self.display, args=(self.event_live,), name='liveThread')
+                    self.live_thread.start()
+
 
             if self.record_thread_flag == True:
                 event_record.set()
@@ -110,7 +122,7 @@ class MainWindow:
     def buffer_thread(self,event_live,event_record):
         while(self.live_thread_flag==True):
             #start = time.clock()
-            time.sleep(0.15)
+            time.sleep(0.13)
             self.get_buffer(event_live,event_record)
             #stop = time.clock()
             #print('time: ',stop-start)
@@ -143,7 +155,7 @@ class MainWindow:
 
     def stop_living(self):
         self.live_thread_flag = False
-        self.event_live.clear()
+        #self.event_live.clear()
         self.hcam.stopAcquisition()
         self.ui.liveButton.setText('Live')
 
@@ -155,9 +167,13 @@ class MainWindow:
         # print("living PID: " + str(pid))
         # print("living thread id: "+str(threading.current_thread().name))
         while (self.live_thread_flag == True):
-            event.wait()
+            event.wait(1)
             event.clear()
-            self.image = self.frames[0].np_array.reshape((2048, 2048))
+            try:
+                self.image = self.frames[0].np_array.reshape((2048, 2048))
+            except:
+                return 0
+
             self.lock.acquire()
             rescale_min = self.rescale_min
             rescale_max = self.rescale_max
@@ -172,6 +188,8 @@ class MainWindow:
             pixmap01 = QtGui.QPixmap.fromImage(qImg)
             #self.ui.livewindow.setPixmap(pixmap01)
             self.ui.item.updateImageWithFrame(pixmap01)
+            #print('living')
+        print('live thread exits')#FIXME: why this sentence is not processed
 
 
 
@@ -186,6 +204,9 @@ class MainWindow:
             #self.liveButton.setChecked(True)
             #self.live_state_change()
         else:
+            if not self.ui.liveButton.isChecked():
+                self.ui.liveButton.setChecked(True)
+                self.live_state_change()
             time = datetime.datetime.now()
             self.filename = self.filepath + str(time)[:10] + '_' +str(time)[11:13]+'_'+str(time)[14:16]
             self.tiff = libtiff.TIFF.open(self.filename + '.tif', mode='w8')
@@ -201,6 +222,7 @@ class MainWindow:
             self.stop_record()
         else:
             self.connect()
+
             self.start_record()
 
 
@@ -211,8 +233,8 @@ class MainWindow:
 
 
     def connect(self):
-        if self.ui.liveButton.isChecked():
-            self.stop_living()
+        #if self.ui.liveButton.isChecked():
+        #    self.stop_living()
 
         self.hcam.setPropertyValue("trigger_source", 2)
         self.hcam.setPropertyValue("trigger_active", 1)
@@ -231,7 +253,7 @@ class MainWindow:
         num=0
         count=0
         while(self.record_thread_flag==True):
-            event.wait()
+            event.wait(1)
             event.clear()
             for i in self.frames:
                 num+=1
@@ -246,7 +268,7 @@ class MainWindow:
                 self.tiff.write_image(image)  # use libtiff
                 # self.tiff.tinytiffwrite(image,self.file)
                 # tifffile.imsave(self.filename, image) #use tifffile.py
-
+        print('record thread exits')
 
 
 
@@ -260,19 +282,21 @@ class MainWindow:
         self.record_thread_flag = True
         self.live_thread_flag=True
         self.ui.recordButton.setText('stop')
-        self.hcam.startAcquisition()
+        #self.hcam.startAcquisition()
         self.hcam.setPropertyValue('exposure_time', float(self.ui.rcam_expo.text()) / 1000.0)
         for i in range(int(float(self.ui.range.text()) / float(self.ui.step.text()))):
             self.in_queue()
         self.synchronous_thread = Mythread(self.worker)
-        self.get_buffer_thread = threading.Thread(target=self.buffer_thread, args=(self.event_live, self.event_record),
-                                                  name='buffer thread')
+        #self.get_buffer_thread = threading.Thread(target=self.buffer_thread, args=(self.event_live, self.event_record),
+        #                                          name='buffer thread')
         self.record_thread = threading.Thread(target=self.recording, args=(self.event_record,), name="recordThread")
-        self.live_thread = threading.Thread(target=self.display, args=(self.event_live,), name='liveThread')
-        self.live_thread.start()
+        if not self.live_thread.is_alive():
+            self.live_thread = threading.Thread(target=self.display, args=(self.event_live,), name='liveThread')
+            self.live_thread.start()
+
         self.record_thread.start()
         self.synchronous_thread.start()
-        self.get_buffer_thread.start()
+        #self.get_buffer_thread.start()
 
 
 

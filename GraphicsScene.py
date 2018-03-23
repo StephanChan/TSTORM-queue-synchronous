@@ -5,8 +5,8 @@ import numpy as np
 
 import c_image_manipulation_c as c_image
 
-class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
-    def __init__(self):
+class QtCameraGraphicsItem(QtWidgets.QGraphicsItem):
+    def __init__(self,parent):
         super(QtCameraGraphicsItem, self).__init__()
         #self.setFlags(QtWidgets.QGraphicsItem.ItemIsSelectable)
         #self.setAcceptHoverEvents(True)
@@ -15,6 +15,7 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
         self.chip_y = 0
         self.q_image=None
         self.test=0
+        self.parent=parent
         #self.event=event
 
 
@@ -42,7 +43,6 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
                                                                       False,
                                                                       [0,255],
                                                                       None)
-
         # Create QImage & re-scale to compensate for binning, if any.
         temp_image = QtGui.QImage(self.temp.data, 2048, 2048, QtGui.QImage.Format_Indexed8)'''
         '''if (self.scale_x != 1) or (self.scale_y != 1):
@@ -63,11 +63,12 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
             self.intensity_info = 0'''
 
         # Force re-paint.
-        self.update()
+        self.parent.update()#you have to call scene's update() function instead of item's, cause in that way the update will fail to call paint after some time
 
 
     def paint(self, painter,option,widget):
             if self.q_image is None:
+                print('no image come in')
                 pass
                 #painter.drawImage(0,0, QtGui.QImage("/home/nauge/PycharmProjects/TSTORM/practice/sv12.png"))
                 #pixmap=QtGui.QImage("/home/nauge/PycharmProjects/TSTORM/practice/sv12.png")
@@ -80,7 +81,6 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
                     for i in range(7):
                         painter.drawLine((i + 1) * x_step, 0, (i + 1) * x_step, self.chip_y)
                         painter.drawLine(0, (i + 1) * y_step, self.chip_x, (i + 1) * y_step)
-
                 # Draw the target into the buffer
                 if self.draw_target:
                     mid_x = self.chip_x / 2 - 20
@@ -96,4 +96,3 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsRectItem):
                 #self.q_pix=QtGui.QPixmap.fromImage(self.q_image)
 
                 painter.drawPixmap(QtCore.QRectF(0,0,600,600), self.q_image, QtCore.QRectF(0,0,600,600))
-
