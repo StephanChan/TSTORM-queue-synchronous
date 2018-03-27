@@ -63,7 +63,7 @@ class MainWindow:
         self.record_thread = threading.Thread(target=self.recording, name="recordThread")
 
     def getIntensityInfo(self,x,y):
-        self.ui.message_label.setText('pixel grey level:'+str(self.frames[0][2048*x+y]))
+        self.ui.message_label.setText('pixel grey level:'+str(self.frames[0][2048*y+x]))
 
     def autoscale(self):
         try:
