@@ -67,13 +67,13 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
             QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))'''
 
     def mousePressEvent(self, event):
-        #pos = self.mapToScene(event.pos())
+        pos = self.mapToScene(event.pos())
         #self.center_x = pos.x()
         #self.center_y = pos.y()
         #self.newCenter.emit(self.center_x, self.center_y)
         #self.centerOn(self.center_x, self.center_y)
-        self.point = QtCore.QPointF(self.mapToScene(event.globalPos()))
-        self.click_on_pixel.emit(self.point.x(),self.point.y())
+        #self.point = QtCore.QPointF(self.mapToScene(event.globalPos()))
+        self.click_on_pixel.emit(pos.x(),pos.y())
 
         '''if self.ctrl_key_down:
             self.drag_mode = True
@@ -143,4 +143,4 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
             else:
                 self.rescale(self.display_scale - 0.1)
             event.accept()
-        print(self.display_scale)
+        #print(self.display_scale)
