@@ -22,6 +22,8 @@ import message
 import shutter as shutter
 import galvo as Galvo
 import synchronization as syn
+import fit_mode as dm_fit
+import peak_finder_c as peak_count
 import tinytiffwriter
 import tifffile
 import libtiff
@@ -58,6 +60,7 @@ class MainWindow:
         self.ui.livewindow.click_on_pixel.connect(self.getIntensityInfo)
         self.ui.set_expo.clicked.connect(lambda: self.set_expo())
         self.ui.set_record_expo.clicked.connect(lambda: self.set_record_expo)
+        self.ui.dm_button.clicked.connect(lambda: self.dm_button_clicked())
 
         self.live_thread = threading.Thread(target=self.display, name='liveThread')
         self.record_thread = threading.Thread(target=self.recording, name="recordThread")
@@ -147,18 +150,44 @@ class MainWindow:
         self.hcam.setPropertyValue('exposure_time', float(self.ui.cam_expo.text()) / 1000.0)
         self.event_live=threading.Event()
         self.event_record=threading.Event()
+        self.event_dm=threading.Event()
         self.get_buffer_thread = threading.Thread(target=self.buffer_thread, args=(self.event_live,self.event_record), name='buffer thread')
         self.get_buffer_thread.start()
         self.live_thread = threading.Thread(target=self.display, args=(self.event_live,), name='liveThread')
         self.live_thread.start()
-
+        self.dm_thread=threading.Thread(target=self.dm_aberration, args=(self.event_dm,),name='dm_thread')
+        self.dm_thread.start()
+        self.event_peak=threading.Event()
+        self.peak_count_thread=threading.Thread(target=self.peak_counting, args=(self.event_peak,), name='peak count thread')
+        self.peak_count_thread.start()
 
     def stop_living(self):
         self.live_thread_flag = False
+        self.event_dm.set()
         #self.event_live.clear()
         self.hcam.stopAcquisition()
         self.ui.liveButton.setText('Live')
 
+    def dm_button_clicked(self):
+        self.event_dm.set()
+
+    def dm_aberration(self,event):
+        self.dm=dm_fit.remove_abrration()
+        while(self.live_thread_flag==True):
+            self.dm.fitting()
+            event.wait()
+            event.clear()
+
+        self.dm.close()
+
+    def peak_counting(self,event):
+        self.peak_count=peak_count.peak_counter()
+        while(self.live_thread_flag==True):
+            event.wait(1)
+            event.clear()
+            self.peak_count.set_flmData(self.image)
+            peaks=self.peak_count.find_peaks()
+            self.ui.peak_count.setText('peak count: '+str(peaks))
 
     def display(self,event):
         '''live child thread
@@ -171,6 +200,8 @@ class MainWindow:
             event.clear()
             try:
                 self.image = self.frames[0].np_array.reshape((2048, 2048))
+                self.event_peak.set()
+                self.dm.image_update(self.image)
             except:
                 return 0
 
