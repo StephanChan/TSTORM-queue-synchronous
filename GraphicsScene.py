@@ -21,7 +21,7 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsItem):
 
 
     def boundingRect(self):
-        return QtCore.QRectF(0,0,600,600)
+        return QtCore.QRectF(0,0,2048,2048)
 
 
     def updateImageWithFrame(self, frame):
@@ -95,4 +95,4 @@ class QtCameraGraphicsItem(QtWidgets.QGraphicsItem):
                 #name="/home/nauge/PycharmProjects/TSTORM/practice/image/"+str(self.num)+'.png'
                 #self.q_pix=QtGui.QPixmap.fromImage(self.q_image)
 
-                painter.drawPixmap(QtCore.QRectF(0,0,600,600), self.q_image, QtCore.QRectF(0,0,600,600))
+                painter.drawPixmap(QtCore.QRectF(0,0,2048,2048), self.q_image, QtCore.QRectF(0,0,2048,2048))

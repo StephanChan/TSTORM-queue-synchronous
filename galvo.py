@@ -15,33 +15,45 @@ class Galvo(QWidget):
         self.ui.setupUI()
         self.ui.refresh.clicked.connect(lambda: self.refresh())
         self.ui.button.clicked.connect(lambda: self.galvo())
-        timer=QtCore
+
 
     def galvo(self):
         if self.ui.button.isChecked():
-            self.ui.button.setText('stop')
-            num = float(self.ui.textbox_V.text())
-            frequency = float(self.ui.textbox_F.text())
-            #self.task = AOTask("/Dev1/ao0", frequency * 2000, frequency * 2000)
-            self.task=PyDAQmx.Task()
-            self.task.CreateAOVoltageChan("/Dev1/ao0", "", -2.0, 2.0,
-                                     PyDAQmx.DAQmx_Val_Volts, None)
-            self.task.CfgSampClkTiming("", int(frequency) * 2000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, int(frequency) * 2000)
 
-            list = np.abs(np.arange(-2 * num, 2 * num, 0.002 * num), dtype=np.float64) - num
+            self.ui.button.setText('stop')
+            num = float(self.ui.textbox_V.text())#range of galvo
+            frequency = float(self.ui.textbox_F.text())#frequency of galvo
+
+            self.task=PyDAQmx.Task()#init self.task
+            #choose ao0 channel to export voltage to Galvo
+            self.task.CreateAOVoltageChan("/Dev1/ao0", "", -2.0, 2.0,#voltage range is [-2,2]
+                                     PyDAQmx.DAQmx_Val_Volts, None)
+            #PyDAQmx.DAQmx_Val_ContSamps set voltage signal as infinite number and continuous
+            self.task.CfgSampClkTiming("", int(frequency) * 2000, PyDAQmx.DAQmx_Val_Rising, PyDAQmx.DAQmx_Val_ContSamps, int(frequency) * 2000)
+            #init voltage  data to export
+            list = np.abs(num*np.arange(-2, 2, 0.002), dtype=np.float64) - num+float(self.ui.offset.text())
             list = np.tile(list, 2 * int(frequency))
             list = np.float64(list)
-
+            #export this data
             self.task.WriteAnalogF64(int(frequency) * 2000, 0, -1, PyDAQmx.DAQmx_Val_GroupByChannel, list, None, None)
             self.task.StartTask()
         else:
             self.ui.button.setText('run')
-            try:
-                self.task.StopTask()
-            except:
-                pass
-        pass
+            self.stop()
 
+
+
+    def stop(self):
+        self.task.StopTask()
+        #self.task.clear()
+        self.task = PyDAQmx.Task()
+        self.task.CreateAOVoltageChan("/Dev1/ao0", "", -2.0, 2.0,
+                                      PyDAQmx.DAQmx_Val_Volts, None)
+        self.task.WriteAnalogScalarF64(1, 10.0, 0, reserved=None)
+
+        #self.task.StopTask()
+
+#change frequency and restart Galvo
     def refresh(self):
         try:
             self.task.StopTask()

@@ -1,3 +1,4 @@
+"""set AOTF gui"""
 from PyQt5.QtWidgets import *
 import PyQt5.QtWidgets as QtWidgets
 import sys
@@ -5,15 +6,16 @@ import sys
 class aotfGui(QWidget):
     def __init__(self):
         super().__init__()
-#        self.setupUI()
+        #self.setupUI()
         #self.show()
 
     def setupUI(self):
-        self.setWindowTitle('AOTF control')
-        self.setGeometry(400, 400, 400, 400)
-        mainLayout = QtWidgets.QVBoxLayout()
+        self.setWindowTitle('AOTF control')#name window as AOTF control
+        self.setGeometry(400, 400, 400, 400)#set window size
+        mainLayout = QtWidgets.QVBoxLayout()#every window has only one layout, every item, say, button, is on the layout
         self.setLayout(mainLayout)
-        self.gridGroupBox = QtWidgets.QGroupBox("AOTF control",self)
+        self.gridGroupBox = QtWidgets.QGroupBox("AOTF control",self)#divide layout into several box, here only one box
+        #text label used to show string
         label_1=QtWidgets.QLabel("channel 1")
         label_2 = QtWidgets.QLabel("channel 2")
         label_3 = QtWidgets.QLabel("channel 3")
@@ -25,7 +27,7 @@ class aotfGui(QWidget):
 
         label_F=QtWidgets.QLabel("set Frequency")
         label_A = QtWidgets.QLabel("set Amplitude")
-
+#text blank
         self.textbox_f1 = QLineEdit(self)
         self.textbox_f1.setText('77.5')
         self.textbox_f2 = QLineEdit(self)
@@ -36,7 +38,7 @@ class aotfGui(QWidget):
         self.textbox_f6 = QLineEdit(self)
         self.textbox_f7 = QLineEdit(self)
         self.textbox_f8 = QLineEdit(self)
-
+#button
         self.button_run1=QPushButton('run',self)
         self.button_run2 = QPushButton('run', self)
         self.button_run3 = QPushButton('run', self)
@@ -45,7 +47,7 @@ class aotfGui(QWidget):
         self.button_run6 = QPushButton('run', self)
         self.button_run7 = QPushButton('run', self)
         self.button_run8 = QPushButton('run', self)
-
+#setCheckable makes the button has two states, on/off
         self.button_run1.setCheckable(True)
         self.button_run2.setCheckable(True)
         self.button_run3.setCheckable(True)
@@ -57,9 +59,10 @@ class aotfGui(QWidget):
 
         self.button_analog=QPushButton('internal',self)
         self.button_analog.setCheckable(True)
+        #self.shutdown=QPushButton('shut down',self)
 
         self.textbox_a1 = QLineEdit(self)
-        self.textbox_a1.setText('0.1')
+        self.textbox_a1.setText('1')
         self.textbox_a2 = QLineEdit(self)
         self.textbox_a2.setText('0.1')
         self.textbox_a3 = QLineEdit(self)
@@ -72,6 +75,7 @@ class aotfGui(QWidget):
 
         layout = QtWidgets.QGridLayout()
         layout.setSpacing(10)
+        #put items onto layout
         layout.addWidget(label_1,2,0)
         layout.addWidget(label_2, 3, 0)
         layout.addWidget(label_3, 4, 0)
@@ -113,9 +117,11 @@ class aotfGui(QWidget):
         layout.addWidget(self.textbox_a8, 9, 2)
 
         layout.addWidget(self.button_analog,1,3)
+        #layout.addWidget(self.shutdown,1,2)
         layout.setColumnStretch(1, 1)
-        self.gridGroupBox.setLayout(layout)
+        self.gridGroupBox.setLayout(layout)#every box has a layout
         mainLayout.addWidget(self.gridGroupBox)
+        #the structure is: GUI>mainlayout>gridGroupBox>layout
 
 if __name__=='__main__':
     app=QtWidgets.QApplication(sys.argv)

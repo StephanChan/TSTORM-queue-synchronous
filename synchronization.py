@@ -16,8 +16,8 @@ class Lines(QWidget):
         self.read = np.int32()
         self.data = np.zeros(1, dtype=np.uint32)
         self.time_405=int(time_405)
-        self.time_647=int(time_647)
         self.frames=int(frames)
+        self.time_647=int(time_647)+12*self.frames
         self.cycles=int(cycles)
         self.exposure=int(exposure)+12
         self.done=bool32(0)
@@ -26,6 +26,7 @@ class Lines(QWidget):
     def lists(self):
         self.list_405=[1]*self.time_405
         #self.list_405.extend([0]*self.frames*(self.exposure))
+
 
 
         self.list_647=[0]*self.time_405

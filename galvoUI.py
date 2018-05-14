@@ -11,7 +11,7 @@ class galvoGui(QWidget):
 
 
     def setupUI(self):
-        self.setWindowTitle('Galvo scanner')
+        self.setWindowTitle('Galvo')
         self.setGeometry(500, 500, 200, 50)
         mainLayout = QVBoxLayout()
         self.setLayout(mainLayout)
@@ -20,7 +20,7 @@ class galvoGui(QWidget):
         label_V=QLabel(self.gridGroupBox)
         label_V.setText('set Voltage(0-2)')
         self.textbox_V=QDoubleSpinBox(self.gridGroupBox)
-        self.textbox_V.setValue(0.8)
+        self.textbox_V.setValue(0.5)
         self.button=QPushButton('run',self)
         self.button.setCheckable(True)
 
@@ -32,6 +32,11 @@ class galvoGui(QWidget):
         self.textbox_F.setValue(100)
         self.refresh=QPushButton('refresh',self)
 
+        label_offset=QLabel('offset',self.gridGroupBox)
+        self.offset=QDoubleSpinBox(self.gridGroupBox)
+        self.offset.setMinimum(-1)
+        self.offset.setValue(0)
+
         
         layout = QGridLayout()
         layout.setSpacing(10)
@@ -41,6 +46,8 @@ class galvoGui(QWidget):
         layout.addWidget(self.label_F, 2, 0)
         layout.addWidget(self.textbox_F, 2, 1)
         layout.addWidget(self.refresh,2,2)
+        layout.addWidget(self.offset,3,1)
+        layout.addWidget(label_offset,3,0)
 
 
         layout.setColumnStretch(1, 1)

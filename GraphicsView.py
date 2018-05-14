@@ -38,7 +38,6 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
 
 
     '''def mouseMoveEvent(self, event):
-
         #print(self.point.x(),self.point.y())
         if self.drag_mode:
             self.dragMove.emit(event.x() - self.drag_x,
@@ -59,7 +58,6 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
         if self.can_drag and (event.key() == QtCore.Qt.Key_Control):
             self.ctrl_key_down = True
             QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
-
     def keyReleaseEvent(self, event):
         if self.can_drag and (event.key() == QtCore.Qt.Key_Control):
             self.ctrl_key_down = False
@@ -68,8 +66,8 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
 
     def mousePressEvent(self, event):
         pos = self.mapToScene(event.pos())
-        #self.center_x = pos.x()
-        #self.center_y = pos.y()
+        self.center_x = pos.x()
+        self.center_y = pos.y()
         #self.newCenter.emit(self.center_x, self.center_y)
         #self.centerOn(self.center_x, self.center_y)
         #self.point = QtCore.QPointF(self.mapToScene(event.globalPos()))
@@ -102,17 +100,14 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
         viewport_rect = self.contentsRect()
         self.viewport_min = viewport_rect.width() if (viewport_rect.width() < viewport_rect.height()) \
             else viewport_rect.height()
-
         self.min_scale = self.calcScale(self.chip_max)
         if (self.display_scale < self.min_scale):
             self.display_scale = self.min_scale
-
         super().resizeEvent(event)'''
 
     def rescale(self, scale):
         """
         Rescale the view so that it looks like we have zoomed in/out.
-
         """
 
         if (scale < self.min_scale) or (scale > self.max_scale):
@@ -132,6 +127,7 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
         transform.scale(flt_scale, flt_scale)
         self.setTransform(self.transform * transform)
         self.centerOn(self.center_x,self.center_y)
+        #print(self.center_x,self.center_y)
 
     def wheelEvent(self, event):
         """
@@ -143,4 +139,4 @@ class QtCameraGraphicsView(QtWidgets.QGraphicsView):
             else:
                 self.rescale(self.display_scale - 0.1)
             event.accept()
-        #print(self.display_scale)
+#print(self.display_scale)

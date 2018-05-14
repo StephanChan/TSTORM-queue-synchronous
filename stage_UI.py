@@ -1,3 +1,4 @@
+"""stage GUI"""
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
@@ -7,26 +8,26 @@ class stageUI(QtWidgets.QWidget):
         super().__init__()
         #self.setupUI()
         #self.show()
-        self.path=os.path.dirname(__file__)
+        self.path=os.path.dirname(__file__)#icon path
 
     def setupUI(self):
         self.setWindowTitle('stage')
         self.setGeometry(400, 400, 500, 500)
         self.setMinimumSize(QtCore.QSize(100, 100))
         self.setMaximumSize(QtCore.QSize(10000, 10000))
-        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout = QtWidgets.QGridLayout(self)#this is the mainLayout
         self.gridLayout.setObjectName("gridLayout")
 
 
 
         spacerItem = QtWidgets.QSpacerItem(1, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         spacerItem1=QtWidgets.QSpacerItem(100, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-# z movebutton
+# z movebutton, divide zGroupBox
         self.zGroupBox = QtWidgets.QGroupBox("z axis control",self)
         self.zGroupBox.setMinimumSize(QtCore.QSize(100, 120))
         self.verticalLayout = QtWidgets.QVBoxLayout(self.zGroupBox)
         self.verticalLayout.setSpacing(0)
-
+        # first line in verticalLayout
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.zGroupBox)
         self.zupButton = QtWidgets.QPushButton(self.zGroupBox)
         self.zupButton.setIcon(
@@ -42,7 +43,7 @@ class stageUI(QtWidgets.QWidget):
         self.horizontalLayout.addWidget(self.zupLButton)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
-
+#second line in verticalLayout
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.zGroupBox)
         self.zdownButton = QtWidgets.QPushButton(self.zGroupBox)
         self.zdownButton.setIcon(
@@ -58,7 +59,7 @@ class stageUI(QtWidgets.QWidget):
         self.horizontalLayout_2.addWidget(self.zdownLButton)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-
+#third line in verticalLayout
         horizontalLayout=QtWidgets.QHBoxLayout()
         label=QtWidgets.QLabel('small move step',self.zGroupBox)
         self.small_step=QtWidgets.QDoubleSpinBox(self.zGroupBox)
@@ -69,7 +70,7 @@ class stageUI(QtWidgets.QWidget):
         horizontalLayout.addWidget(label)
         horizontalLayout.addWidget(self.small_step)
         self.verticalLayout.addLayout(horizontalLayout)
-
+#fourth line in verticalLayout
         horizontalLayout2=QtWidgets.QHBoxLayout()
         label2=QtWidgets.QLabel('big move step',self.zGroupBox)
         self.big_step = QtWidgets.QDoubleSpinBox(self.zGroupBox)
@@ -295,9 +296,9 @@ class stageUI(QtWidgets.QWidget):
         self.horizontalLayout_p1.addWidget(self.label)
 
         self.piezo_doublespinbox = QtWidgets.QDoubleSpinBox(self.piezoGroupBox)
-        self.piezo_doublespinbox.setDecimals(1)
-        self.piezo_doublespinbox.setMinimum(-200.0)
-        self.piezo_doublespinbox.setMaximum(200.0)
+        self.piezo_doublespinbox.setDecimals(3)
+        self.piezo_doublespinbox.setMinimum(0)
+        self.piezo_doublespinbox.setMaximum(101)
         self.horizontalLayout_p1.addWidget(self.piezo_doublespinbox)
 
         self.piezo_go = QtWidgets.QPushButton('GO', self.piezoGroupBox)
@@ -310,7 +311,9 @@ class stageUI(QtWidgets.QWidget):
         self.horizontalLayout_p3.addWidget(self.zrel_label)
 
         self.zReldoublespinbox=QtWidgets.QDoubleSpinBox()
-        self.zReldoublespinbox.setMaximum(200)
+        self.zReldoublespinbox.setDecimals(3)
+        self.zReldoublespinbox.setMaximum(100)
+        self.zReldoublespinbox.setMinimum(-100)
         self.zReldoublespinbox.setValue(0)
         self.horizontalLayout_p3.addWidget(self.zReldoublespinbox)
 

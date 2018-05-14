@@ -5,7 +5,7 @@ from numpy.ctypeslib import ndpointer
 
 class merit_func():
     def __init__(self):
-        self.dll=ctypes.cdll.LoadLibrary('E:\\vs file\\merit_func\\Release\\merit_func.dll')
+        self.dll=ctypes.cdll.LoadLibrary('D:\storm-control-python3_pyqt5\storm-control-python3_pyqt5\storm_control\hal4000\my_hardware\\merit_func.dll')
         self.dll.merit_func.argtypes=[ndpointer(dtype=ctypes.c_double),
                                       ndpointer(dtype=ctypes.c_double),
                                       ctypes.c_int,
@@ -16,10 +16,10 @@ class merit_func():
     def calc(self, image):
         merit_real=ctypes.c_double(0)
         merit_img=ctypes.c_double(0)
-        size_x=ctypes.c_int(image.shape[1])
-        size_y=ctypes.c_int(image.shape[0])
         image_fft=np.fft.fft2(image)
         image_real=image_fft.real
+        size_x = ctypes.c_int(image.shape[1])
+        size_y = ctypes.c_int(image.shape[0])
         image_img=image_fft.imag
         self.dll.merit_func(image_real,image_img,size_x,size_y,ctypes.pointer(merit_real),ctypes.pointer(merit_img))
         #merit_value=0+0j

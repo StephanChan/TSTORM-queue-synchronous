@@ -1,3 +1,4 @@
+""""""
 from PyQt5.QtWidgets import *
 import PyQt5.QtWidgets as QtWidgets
 import sys
@@ -11,9 +12,10 @@ class Aotf(QWidget):
         self.ui=ui.aotfGui()
         self.ui.setupUI()
         self.ui.show()
-        self.AOTF_handle = aotf.AOTF()
-
+        self.AOTF_handle = aotf.AOTF()#AOTF handle
+#connect buttons to functions
         self.ui.button_analog.clicked.connect(lambda: self.analog())
+        #self.ui.shutdown.clicked.connect(lambda: self.shutdown())
         self.ui.button_run1.clicked.connect(lambda: self.channel_1_set())
         self.ui.button_run2.clicked.connect(lambda: self.channel_2_set())
         self.ui.button_run3.clicked.connect(lambda: self.channel_3_set())
@@ -23,6 +25,7 @@ class Aotf(QWidget):
         self.ui.button_run7.clicked.connect(lambda: self.channel_7_set())
         self.ui.button_run8.clicked.connect(lambda: self.channel_8_set())
 
+#channel 1 on/off
     def channel_1_set(self):
         if self.ui.button_run1.isChecked():
             if self.ui.textbox_f1.text() != "" and self.ui.textbox_a1.text() != "":
@@ -114,7 +117,7 @@ class Aotf(QWidget):
     def shutdown(self):
         self.AOTF_handle.shutdown()
 
-
+#choose trigger source
     def analog(self):
 
             if self.ui.button_analog.isChecked():

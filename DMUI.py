@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets,QtGui,QtCore
+from PyQt5 import QtWidgets
 
 class dmUI(QtWidgets.QWidget):
     def __init__(self):
@@ -27,8 +27,13 @@ class dmUI(QtWidgets.QWidget):
         horizontalLayout_2.addWidget(self.textbox)
         horizontalLayout_2.addWidget(self.astig_button)
 
+        horizontalLayout_3=QtWidgets.QHBoxLayout()
+        self.flat_button=QtWidgets.QPushButton('flat',self)
+        horizontalLayout_3.addWidget(self.flat_button)
+
         mainLayout.addLayout(horizontalLayout_1)
         mainLayout.addLayout(horizontalLayout_2)
+        mainLayout.addLayout(horizontalLayout_3)
 
 
 if __name__=='__main__':
