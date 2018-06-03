@@ -1,8 +1,8 @@
-import gene_zernike_modes as modes
-import my_difformable_mirror as dm
+import gene_zernike_mode as modes
+import my_diformable_mirror as dm
 from scipy.optimize import leastsq
 import numpy as np
-import calc_merit_func_c as merit_func
+import calc_merit_func as merit_func
 import time
 import threading
 import DMUI as ui
@@ -14,81 +14,65 @@ def func(x,parameter):
 def residuals(parameter,y,x):
     return y-func(x,parameter)
 
-class remove_aberration():
+class remove_abrration():
     def __init__(self):
         super().__init__()
         self.ui=ui.dmUI()
         self.ui.setup()
         self.ui.show()
         self.event=threading.Event()
-        self.event.clear()
-        self.image=None
-        self.scope=[
-                    [-0.1,-0.07,-0.03,0,0.03,0.07,0.1],]
+        self.scope=[[-0.9,-0.3,0.3,0.9],
+                    [-0.3,0,0.3],
+                    [-0.1,-0.07,-0.03,0,0.03,0.07,0.1]]
 
-        self.dm=dm.DMirror('D:\CD_MIRAO.2013.12.09-x64\dll\\x64\\mirao52e.dll')
-        self.merit_func=merit_func.merit_func()
+        self.dm=dm.DMirror('dll_path')
+        self.merit_func=merit_func()
         self.ui.on_button.clicked.connect(lambda: self.open())
         self.ui.aberration_button.clicked.connect(lambda: self.aberration())
-        self.ui.astig_button.clicked.connect(lambda: self.astigmatism())
-        self.ui.flat_button.clicked.connect(lambda:self.flat_mode())
+        self.ui.button_0.clicked.connect(lambda: self.astigmatism_at_0())
+        self.ui.button_1.clicked.connect(lambda: self.astigmatism_at_45())
+        self.ui.button_2.clicked.connect(lambda: self.coma_at_90())
+        self.ui.button_3.clicked.connect(lambda: self.coma_at_0())
+        self.ui.button_4.clicked.connect(lambda: self.trenfoil_at_90())
+        self.ui.button_5.clicked.connect(lambda: self.trenfoil_at_45())
+        self.ui.button_6.clicked.connect(lambda: self.spherical_abrration())
+        self.ui.button_7.clicked.connect(lambda: self.quadrafoil_at_90())
+        self.ui.button_8.clicked.connect(lambda: self.quadrafoil_at_45())
 
     def open(self):
         if self.ui.on_button.isChecked():
-            self.dm.DM_open()
+            self.dm.mro_open()
             self.ui.on_button.setText('close')
-            aberration_thread = threading.Thread(target=self.aberration_remove, args=(self.event,), name='aberration thread')
+            aberration_thread = threading.Thread(target=self.aberration_remove(), name='aberration thread')
             aberration_thread.start()
         else:
-            self.dm.DM_close()
+            self.dm.mro_close()
             self.ui.on_button.setText('open')
-
-    def flat_mode(self):
-        command=np.zeros((52,))
-        self.dm.DM_read_file(path=b'D:\haso\\52\\flat\\FLAT_MIRAO_0271_01.mro',command=command)
-        print(command)
-        self.dm.DM_applySmoothCommand(command)
 
 
     def image_update(self,image):
-        self.image=image[768:1280,512:1536]
+        self.image=image
 
-    def merit_function(self,coef=None):
-
+    def merit_func(self):
         return self.merit_func.calc(self.image)#difine merit function here
 
-    def one_fit(self,offset,scope,mode,mode_name):
-        merit_value = []
-        for coef in np.array(scope) + offset:
-            if -0.7<coef<0.7:
-                print(coef)
-                self.dm.DM_applySmoothCommand(np.array(mode) * coef)
-                merit_value += [self.merit_function(coef=coef)]
-                time.sleep(0.15)
-            else:
-                print(mode_name,' remove fail')
-                return -2.0, 0.0
-
-        p0 = [1, 1, 1]
-        plsq = leastsq(residuals, p0, args=(merit_value, np.array(scope) + offset))
-        print(merit_value,  plsq[0])
-        return plsq[0][1], plsq[0][2]
+    def one_fit(self,offset,scope,mode):
+        merit_value=[]
+        for coef in np.array(scope)+offset:
+            self.dm.mro_applySmoothCommand(mode*coef)
+            merit_value+=[self.merit_func()]
+        p0 = [-1,1,1]
+        plsq = leastsq(residuals, p0, args=(merit_value, scope))
+        return plsq[0][1],plsq[0][2]
 
     def one_mode_fit(self,mode_name):
-        offset = 0
+        offset=0
         for scope in self.scope:
-            if offset>-0.7 or offset <0.7:
-                offset, merit_value = self.one_fit(offset, scope, modes.modes[mode_name],mode_name)
-
-            else:
-                #print(mode_name, 'fail')
-                return 0
-        if offset<=-0.7 or offset >=0.7:
-            return offset
-        else:
-            print(offset)
-            self.dm.DM_applySmoothCommand(np.array(modes.modes[mode_name]) * offset)
-            print(mode_name, ' ', offset)
+            offset,merit_value=self.one_fit(offset,scope,modes.modes[mode_name])
+        self.dm.mro_applySmoothCommand(modes.modes[mode_name] * offset)
+        blank=getattr(self.ui, mode_name)
+        blank.setText(str(offset))
+        print(mode_name,' ',offset)
 
 
     def aberration_remove(self,event):
@@ -97,22 +81,47 @@ class remove_aberration():
             event.clear()
             for mode in modes.modes.keys():
                 self.one_mode_fit(mode)
-                #time.sleep(0.5)
+                time.sleep(0.5)
 
 
     def aberration(self):
         self.event.set()
 
-    def astigmatism(self):
-        coef=float(self.ui.textbox.text())
-        self.dm.DM_applySmoothCommand(np.array(modes.modes['astigmatism_at_0'])*coef)
+    def astigmatism_at_0(self):
+        coef=float(self.ui.textbox_0.text())
+        self.dm.mro_applySmoothCommand(modes.modes['astigmatism_at_0']*coef)
+
+    def astigmatism_at_45(self):
+        coef=float(self.ui.textbox_1.text())
+        self.dm.mro_applySmoothCommand(modes.modes['astigmatism_at_45']*coef)
+
+    def coma_at_90(self):
+        coef=float(self.ui.textbox_2.text())
+        self.dm.mro_applySmoothCommand(modes.modes['coma_at_90']*coef)
+
+    def coma_at_0(self):
+        coef=float(self.ui.textbox_3.text())
+        self.dm.mro_applySmoothCommand(modes.modes['coma_at_0']*coef)
+
+    def trenfoil_at_90(self):
+        coef=float(self.ui.textbox_4.text())
+        self.dm.mro_applySmoothCommand(modes.modes['trenfoil_at_90']*coef)
+
+    def trenfoil_at_45(self):
+        coef=float(self.ui.textbox_5.text())
+        self.dm.mro_applySmoothCommand(modes.modes['trenfoil_at_45']*coef)
+
+    def spherical_abrration(self):
+        coef=float(self.ui.textbox_6.text())
+        self.dm.mro_applySmoothCommand(modes.modes['spherical_abrration']*coef)
+
+    def quadrafoil_at_90(self):
+        coef=float(self.ui.textbox_7.text())
+        self.dm.mro_applySmoothCommand(modes.modes['quadrafoil_at_90']*coef)
+
+    def quadrafoil_at_45(self):
+        coef=float(self.ui.textbox_8.text())
+        self.dm.mro_applySmoothCommand(modes.modes['quadrafoil_at_45']*coef)
 
     def close(self):
         self.dm.mro_close()
-
-if __name__=='__main__':
-    import sys
-    from PyQt5 import QtWidgets
-    app = QtWidgets.QApplication(sys.argv)
-    ex = remove_aberration()
-    sys.exit(app.exec_())
