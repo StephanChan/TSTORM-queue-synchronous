@@ -10,8 +10,8 @@ import time as Time
 
 class picture(QLabel):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent=parent)
         self.resize(400,400)
         self.delta=self.width()/6
         self.delta_x=self.width()/100
@@ -19,9 +19,17 @@ class picture(QLabel):
         self.x=[]
         self.y=[]
         self.func=[]
-        self.path='D:\\data\\DM_process\\'
+        self.path='/home/nauge/PycharmProjects/TSTORM/practice/image/'
+        self.mode_name=''
 
 
+    '''def paintEvent(self,event):
+        qp = QPainter(self)
+        qp.drawPixmap(0,0,self.q_pixmap)
+        qp.setPen(QColor(255,255,255))
+        for i in range(len(self.x)):
+            qp.drawPoint(self.x[i],
+                         self.y[i])'''
     def paintEvent(self,event):
         image=QtGui.QImage(400,400,QtGui.QImage.Format_RGB32)
         qp=QPainter(image)
@@ -62,13 +70,10 @@ class display(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.lb = picture()
+        self.lb = picture(self)
 
         self.setWindowTitle('peaks')
         self.setGeometry(300,300,400,400)
-        layout=QGridLayout()
-        layout.addWidget(self.lb)
-        self.setLayout(layout)
         #self.a_thread()
         self.show()
 
@@ -80,7 +85,7 @@ class display(QWidget):
         for i in range(105):
             x=[]
             y=[]
-            func=[]
+            #func=[]
             for i in range(5):
                 x += [random.randint(0, 5)]
                 y += [random.randint(0, 14)]
