@@ -1,0 +1,10 @@
+live exposure time:50
+isolated record exposure time:20
+synchronous record time:20
+cycles:1
+frames:1
+file name:None
+file type:tif
+time 405:0
+stage range:20
+stage step:0.5
