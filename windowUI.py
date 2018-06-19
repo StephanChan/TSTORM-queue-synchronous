@@ -257,7 +257,35 @@ class MainWindow(QWidget):
 
 
         self.recordButton.setCheckable(True)
-
+    def read_settings(self):
+        d = {}
+        with open("E:\T-STORM\Data\\settings.txt", 'r') as f:
+            for line in f:
+                #print(line)
+                (key, val) = line.split(':')
+                d[key] = val
+        for i in d:
+            if i=='live exposure time':
+                self.cam_expo.setValue(int(d[i]))
+            if i=='isolated record exposure time':
+                self.Icam_expo.setValue(int(d[i]))
+            if i=='synchronous record time':
+                self.rcam_expo.setValue(int(d[i]))
+            if i=='cycles':
+                self.rcycles.setValue(int(d[i]))
+            if i=='frames':
+                self.rframes.setValue(int(d[i]))
+            if i=='file name' and d[i]!='None\n':
+                self.name_text.setText(d[i])
+            if i=='file type':
+                self.file_type.setCurrentText(d[i])
+            if i=='time 405':
+                self.r_405_expo.setValue(int(d[i]))
+            if i=='stage range':
+                self.range.setValue(float(d[i]))
+            if i=='stage step':
+                self.step.setValue(float(d[i]))
+            self.r_647_expo.setValue(int(d['frames'])*int(d['synchronous record time']))
 def update():
         for i in range(100):
             num = random.randint(0, 300)
