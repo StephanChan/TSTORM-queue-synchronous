@@ -1,4 +1,8 @@
 # TSTORM_communication_enabled
+# write in 2023
+this is the hardware-control software for a TSTORM microscope system built at USTC.
+
+# write in 2018
 
 this is the newest version of TSTORM software. 
 
